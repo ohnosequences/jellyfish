@@ -1,5 +1,4 @@
 package ohnosequences.jellyfish
 
-class Jellyfish {
-
-}
+import ohnosequences.cosas._, types._, records._, fns._, klists._
+import better.files._
