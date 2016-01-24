@@ -21,19 +21,47 @@ case object jellyfish {
     lazy val defaults = options(
       mer_len(24)       ::
       canonical(true)   ::
-      size(100000000)   ::
+      size(100000000L)  ::
       threads(1)        :: *[AnyDenotation]
     )
   }
 
+  case object dump extends JellyfishCommand {
 
-  case object mer_len   extends JellyfishOption[Int](x => Seq(x.toString))
-  case object size      extends JellyfishOption[Int](x => Seq(x.toString))
-  case object threads   extends JellyfishOption[Int](x => Seq(x.toString))
-  case object canonical extends JellyfishOption[Boolean](x => Seq())
+    type Arguments = arguments.type
+    case object arguments extends RecordType(input :×: output :×: |[AnyJellyfishOption])
 
-  case object input     extends JellyfishOption[File](x => Seq(x.path.toString))
-  case object output    extends JellyfishOption[File](x => Seq(x.path.toString))
+    type Options = options.type
+    case object options extends RecordType(
+      columnar    :×:
+      tab         :×:
+      lower_count :×:
+      upper_count :×: |[AnyJellyfishOption]
+    )
+
+    lazy val defaults = options(
+      columnar(true)              ::
+      tab(true)                   ::
+      lower_count(1L)             ::
+      // 4 bytes counter size is twice this but...
+      upper_count(Long.MaxValue)  :: *[AnyDenotation]
+    )
+  }
+
+  case object mer_len     extends JellyfishOption[Int](x => Seq(x.toString))
+  case object size        extends JellyfishOption[Long](x => Seq(x.toString))
+  case object threads     extends JellyfishOption[Int](x => Seq(x.toString))
+  case object canonical   extends JellyfishOption[Boolean](x => Seq())
+
+  case object input       extends JellyfishOption[File](x => Seq(x.path.toString))
+  case object output      extends JellyfishOption[File](x => Seq(x.path.toString))
+
+  case object columnar    extends JellyfishOption[Boolean](x => Seq())
+  case object tab         extends JellyfishOption[Boolean](x => Seq())
+  case object lower_count extends JellyfishOption[Long](x => Seq(toString))
+  case object upper_count extends JellyfishOption[Long](x => Seq(toString))
+
+
 
   sealed trait AnyJellyfishCommand {
 
