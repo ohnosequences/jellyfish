@@ -12,20 +12,30 @@ class CommandGeneration extends FunSuite {
 
   test("can generate Jellyfish commands") {
 
+    val reads       : File = File("reads.fasta")
+    val readsCount  : File = File("reads.count")
+    val readsHisto  : File = File("reads.histo")
+
     val countExpr = JellyfishExpression(jellyfish.count)(
       jellyfish.count.arguments(
-        input(File("reads.fasta"))  ::
-        output(File("reads.count")) :: *[AnyDenotation]
+        input(reads)        ::
+        output(readsCount)  ::
+        *[AnyDenotation]
       ),
       jellyfish.count.defaults
     )
 
-    val cmdSeq = countExpr.cmd
-    println { cmdSeq }
-    cmdSeq.!
-    assert(
-
-      12 === 12
+    val histoExpr = JellyfishExpression(jellyfish.histo)(
+      jellyfish.histo.arguments(
+        input(readsCount)   ::
+        output(readsHisto)  ::
+        *[AnyDenotation]
+      ),
+      jellyfish.histo.defaults
     )
+
+    // TODO do something with this
+    countExpr.cmd.!!
+    histoExpr.cmd.!!
   }
 }

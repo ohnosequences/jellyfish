@@ -48,20 +48,47 @@ case object jellyfish {
     )
   }
 
+  case object histo extends JellyfishCommand {
+
+    type Arguments = arguments.type
+    case object arguments extends RecordType(
+      input   :×:
+      output  :×:
+      |[AnyJellyfishOption]
+    )
+
+    type Options = options.type
+    case object options extends RecordType(
+      low       :×:
+      high      :×:
+      threads   :×:
+      increment :×:
+      full      :×: |[AnyJellyfishOption]
+    )
+
+    lazy val defaults = options(
+      low(1L)       ::
+      high(10000L)  ::
+      threads(1)    ::
+      increment(1L) ::
+      full(false)   :: *[AnyDenotation]
+    )
+  }
+
+  case object input       extends JellyfishOption[File](x => Seq(x.path.toString))
+  case object output      extends JellyfishOption[File](x => Seq(x.path.toString))
   case object mer_len     extends JellyfishOption[Int](x => Seq(x.toString))
   case object size        extends JellyfishOption[Long](x => Seq(x.toString))
   case object threads     extends JellyfishOption[Int](x => Seq(x.toString))
   case object canonical   extends JellyfishOption[Boolean](x => Seq())
-
-  case object input       extends JellyfishOption[File](x => Seq(x.path.toString))
-  case object output      extends JellyfishOption[File](x => Seq(x.path.toString))
-
   case object columnar    extends JellyfishOption[Boolean](x => Seq())
   case object tab         extends JellyfishOption[Boolean](x => Seq())
   case object lower_count extends JellyfishOption[Long](x => Seq(toString))
   case object upper_count extends JellyfishOption[Long](x => Seq(toString))
-
-
+  case object low         extends JellyfishOption[Long](x => Seq(x.toString)) // (1)
+  case object high        extends JellyfishOption[Long](x => Seq(x.toString)) // (10000)
+  case object increment   extends JellyfishOption[Long](x => Seq(x.toString)) //  Increment value for buckets (1)
+  case object full        extends JellyfishOption[Boolean](x => Seq()) // Don't skip count 0. (false)
 
   sealed trait AnyJellyfishCommand {
 
