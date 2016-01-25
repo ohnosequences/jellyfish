@@ -1,0 +1,7 @@
+This is a first working version, containing as commands with *all* options:
+
+- `jellyfish count`
+- `jellyfish dump`
+- `jellyfish histo`
+- `jellyfish query` separated into *two* commands, one for which the input are kmers (`query`)  and another for counting all the sub-kmers of a set of sequences (`queryAll`)
+
