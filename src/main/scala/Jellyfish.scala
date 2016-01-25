@@ -75,6 +75,61 @@ case object jellyfish {
     )
   }
 
+  case object query extends JellyfishCommand {
+
+    type Arguments = arguments.type
+    case object arguments extends RecordType(
+      input   :×:
+      mers    :×:
+      output  :×:
+      |[AnyJellyfishOption]
+    )
+
+    type Options = options.type
+    case object options extends RecordType(
+      load      :×:
+      no_load   :×:
+      |[AnyJellyfishOption]
+    )
+
+    lazy val defaults = options(
+      load(false)     ::
+      no_load(false)  ::
+      *[AnyDenotation]
+    )
+  }
+
+  case object queryAll extends JellyfishCommand {
+
+    override lazy val name = Seq("jellyfish", "query")
+
+    type Arguments = arguments.type
+    case object arguments extends RecordType(
+      input     :×:
+      sequence  :×:
+      output    :×:
+      |[AnyJellyfishOption]
+    )
+
+    type Options = options.type
+    case object options extends RecordType(
+      load      :×:
+      no_load   :×:
+      |[AnyJellyfishOption]
+    )
+
+    lazy val defaults = options(
+      load(false)     ::
+      no_load(false)  ::
+      *[AnyDenotation]
+    )
+  }
+
+  // NOTE: funny option for input of cmds
+  case object mers        extends JellyfishOption[Seq[String]](x => x)
+  case object sequence    extends JellyfishOption[File](x => Seq(x.path.toString))
+  case object load        extends JellyfishOption[Boolean](x => Seq())
+  case object no_load     extends JellyfishOption[Boolean](x => Seq())
   case object input       extends JellyfishOption[File](x => Seq(x.path.toString))
   case object output      extends JellyfishOption[File](x => Seq(x.path.toString))
   case object mer_len     extends JellyfishOption[Int](x => Seq(x.toString))
@@ -124,11 +179,13 @@ case object jellyfish {
   }
   case object optionValueToSeq extends DefaultOptionValueToSeq {
 
+    // special cases
+
     implicit def atInput[V <: input.Raw]: AnyApp1At[optionValueToSeq.type, input.type := V] { type Y  = Seq[String] } =
       App1 { v: input.type := V => input.valueToCmd(v.value) }
 
-    // implicit def atOutput[V <: output.Raw]: AnyApp1At[optionValueToSeq.type, output.type := V]  { type Y = Seq[String] } =
-    //   App1 { v: output.type := V => output.valueToCmd(v.value) }
+    implicit def atMers[V <: mers.Raw]: AnyApp1At[optionValueToSeq.type, mers.type := V]  { type Y = Seq[String] } =
+      App1 { v: mers.type := V => mers.valueToCmd(v.value) }
   }
 
   trait AnyJellyfishExpression {
