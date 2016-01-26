@@ -15,48 +15,67 @@ class CommandGeneration extends FunSuite {
   test("can generate Jellyfish commands") {
 
     val reads       : File = File("reads.fasta")
+    val readsBloom  : File = File("reads.bloom")
     val readsCount  : File = File("reads.count")
     val readsHisto  : File = File("reads.histo")
     val mersQuery   : File = File("mers.query")
     val fastaQ      : File = File("query.fasta")
     val readQuery   : File = File("reads.query")
 
-    val countExpr = JellyfishExpression(count)(
-      count.arguments(
+    val countExpr = JellyfishExpression(jellyfish.count)(
+      jellyfish.count.arguments(
         input(reads)        ::
         output(readsCount)  ::
         *[AnyDenotation]
       ),
-      count.defaults update mer_len(4)
+      jellyfish.count.defaults update mer_len(4)
     )
 
-    val histoExpr = JellyfishExpression(histo)(
-      histo.arguments(
+    val bcExpr = JellyfishExpression(jellyfish.bc)(
+      jellyfish.bc.arguments(
+        input(reads)        ::
+        output(readsBloom)  ::
+        *[AnyDenotation]
+      ),
+      jellyfish.bc.defaults
+    )
+
+    val countAgainExpr = JellyfishExpression(jellyfish.count)(
+      jellyfish.count.arguments(
+        input(reads)        ::
+        output(readsCount)  ::
+        *[AnyDenotation]
+      ),
+      jellyfish.count.defaults update (mer_len(4) :: bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])
+    )
+
+    val histoExpr = JellyfishExpression(jellyfish.histo)(
+      jellyfish.histo.arguments(
         input(readsCount)   ::
         output(readsHisto)  ::
         *[AnyDenotation]
       ),
-      histo.defaults
+      jellyfish.histo.defaults
     )
 
-    val queryExpr = JellyfishExpression(query)(
-      query.arguments(
+    val queryExpr = JellyfishExpression(jellyfish.query)(
+      jellyfish.query.arguments(
         input(readsCount) ::
         mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
         output(mersQuery) ::
         *[AnyDenotation]
       ),
-      query.defaults
+      jellyfish.query.defaults
     )
 
-    val queryAllExpr = JellyfishExpression(queryAll)(
-      queryAll.arguments(
+    val queryAllExpr = JellyfishExpression(jellyfish.queryAll)(
+      jellyfish.queryAll.arguments(
         input(readsCount) ::
         sequence(fastaQ)  ::
         output(readQuery) ::
         *[AnyDenotation]
       ),
-      queryAll.defaults
+      jellyfish.queryAll.defaults
     )
 
     // TODO do something with this
