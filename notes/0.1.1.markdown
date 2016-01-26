@@ -1,0 +1,4 @@
+Significant changes
+
+- #5 add the `jellyfish bc` command and an option for using its output from `jellyfish count`
+- Scope all commands into a separate object, now they are accessed as `jellyfish.${cmd}`
