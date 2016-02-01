@@ -48,6 +48,11 @@ case object optionValueToSeq extends DefaultOptionValueToSeq {
     App1 {
        v: bc.type := V => v.value match { case None => Seq(); case Some(f) => Seq(bc.label) ++ bc.valueToCmd(Some(f)) }
     }
+
+  implicit def atBools[O <: AnyJellyfishOption { type Raw = Boolean }]:
+    AnyApp1At[optionValueToSeq.type, O := Boolean] { type Y = Seq[String] } =
+    App1 { opt: O := Boolean => if (opt.value) Seq(opt.tpe.label) else Seq() }
+
 }
 
 trait AnyJellyfishExpression {
