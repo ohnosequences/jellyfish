@@ -108,6 +108,6 @@ case class JellyfishExpressionOps[FE <: AnyJellyfishExpression](val expr: FE) ex
 
 
 
-[test/scala/Jellyfish.scala]: ../../test/scala/Jellyfish.scala.md
-[main/scala/traits.scala]: traits.scala.md
 [main/scala/jellyfish.scala]: jellyfish.scala.md
+[main/scala/traits.scala]: traits.scala.md
+[test/scala/Jellyfish.scala]: ../../test/scala/Jellyfish.scala.md

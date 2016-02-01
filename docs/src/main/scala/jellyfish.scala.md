@@ -61,18 +61,18 @@ case object jellyfish {
 
     type Options = options.type
     case object options extends RecordType(
-      columnar    :×:
+      column      :×:
       tab         :×:
       lower_count :×:
       upper_count :×: |[AnyJellyfishOption]
     )
 
     lazy val defaults = options(
-      columnar(true)              ::
-      tab(true)                   ::
-      lower_count(1L)             ::
+      column(true)    ::
+      tab(true)       ::
+      lower_count(1L) ::
       // 4 bytes counter size is twice this but...
-      upper_count(Long.MaxValue)  :: *[AnyDenotation]
+      upper_count(Long.MaxValue) :: *[AnyDenotation]
     )
   }
 
@@ -166,10 +166,10 @@ case object mer_len     extends JellyfishOption[Int](x => Seq(x.toString))
 case object size        extends JellyfishOption[Long](x => Seq(x.toString))
 case object threads     extends JellyfishOption[Int](x => Seq(x.toString))
 case object canonical   extends JellyfishOption[Boolean](x => Seq())
-case object columnar    extends JellyfishOption[Boolean](x => Seq())
+case object column      extends JellyfishOption[Boolean](x => Seq())
 case object tab         extends JellyfishOption[Boolean](x => Seq())
-case object lower_count extends JellyfishOption[Long](x => Seq(toString))
-case object upper_count extends JellyfishOption[Long](x => Seq(toString))
+case object lower_count extends JellyfishOption[Long](x => Seq(x.toString))
+case object upper_count extends JellyfishOption[Long](x => Seq(x.toString))
 case object low         extends JellyfishOption[Long](x => Seq(x.toString)) // (1)
 case object high        extends JellyfishOption[Long](x => Seq(x.toString)) // (10000)
 case object increment   extends JellyfishOption[Long](x => Seq(x.toString)) //  Increment value for buckets (1)
@@ -184,6 +184,6 @@ case object bc          extends JellyfishOption[Option[File]](
 
 
 
-[test/scala/Jellyfish.scala]: ../../test/scala/Jellyfish.scala.md
-[main/scala/traits.scala]: traits.scala.md
 [main/scala/jellyfish.scala]: jellyfish.scala.md
+[main/scala/traits.scala]: traits.scala.md
+[test/scala/Jellyfish.scala]: ../../test/scala/Jellyfish.scala.md
