@@ -1,0 +1,4 @@
+Fixed the `dump` command construction:
+
+- `columnar` switch is actually called `column`
+- `lower_count`/`high_count` values serialization was wrong
