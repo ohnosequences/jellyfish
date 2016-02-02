@@ -34,11 +34,11 @@ case object dump extends JellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    column(true)    ::
-    tab(true)       ::
-    lower_count(1L) ::
+    column(true)                ::
+    tab(true)                   ::
+    lower_count(1: BigInt)      ::
     // 4 bytes counter size is twice this but...
-    upper_count(Long.MaxValue) :: *[AnyDenotation]
+    upper_count(BigInt("4294967295"))  :: *[AnyDenotation]
   )
 
   def apply(

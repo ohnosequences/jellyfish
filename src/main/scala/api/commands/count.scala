@@ -37,11 +37,11 @@ case object count extends JellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    opt.mer_len(24) ::
-    opt.canonical(true) ::
-    opt.size(100000000L) ::
-    opt.bc(None: Option[File]) ::
-    opt.threads(1) ::
+    opt.mer_len(24)             ::
+    opt.canonical(true)         ::
+    opt.size(100000000: BigInt) ::
+    opt.bc(None: Option[File])  ::
+    opt.threads(1)              ::
     *[AnyDenotation]
   )
 

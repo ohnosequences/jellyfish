@@ -36,11 +36,11 @@ case object bc extends JellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    mer_len(24)       ::
-    canonical(true)   ::
-    fpr(0.001)        ::
-    size(100000000L)  ::
-    threads(1)        :: *[AnyDenotation]
+    mer_len(24)             ::
+    canonical(true)         ::
+    fpr(0.001)              ::
+    size(100000000: BigInt) ::
+    threads(1)              :: *[AnyDenotation]
   )
 
   def apply(
