@@ -1,6 +1,6 @@
 
 ```scala
-package ohnosequences.jellyfish
+package ohnosequences.jellyfish.api
 
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 
@@ -13,44 +13,6 @@ sealed trait AnyJellyfishCommand {
 }
 abstract class JellyfishCommand extends AnyJellyfishCommand
 
-trait AnyJellyfishOption extends AnyType {
-
-  lazy val cmdName: String = toString replace("_", "-")
-  // this is what is used for generating the Seq[String] cmd
-  lazy val label: String = s"--${cmdName}"
-
-  val valueToCmd: Raw => Seq[String]
-}
-
-abstract class JellyfishOption[V](val valueToCmd: V => Seq[String]) extends AnyJellyfishOption { type Raw = V }
-
-case object AnyJellyfishOption {
-  type is[FO <: AnyJellyfishOption] = FO with AnyJellyfishOption { type Raw = FO#Raw }
-}
-
-trait DefaultOptionValueToSeq extends DepFn1[Any, Seq[String]] {
-
-  implicit def default[FO <: AnyJellyfishOption, V <: FO#Raw](implicit
-    option: FO with AnyJellyfishOption { type Raw = FO#Raw }
-  )
-  : AnyApp1At[optionValueToSeq.type, FO := V] { type Y = Seq[String] }=
-    App1 { v: FO := V => Seq(option.label) ++ option.valueToCmd(v.value).filterNot(_.isEmpty) }
-}
-case object optionValueToSeq extends DefaultOptionValueToSeq {
-
-  // special cases
-
-  implicit def atInput[V <: input.Raw]: AnyApp1At[optionValueToSeq.type, input.type := V] { type Y  = Seq[String] } =
-    App1 { v: input.type := V => input.valueToCmd(v.value) }
-
-  implicit def atMers[V <: mers.Raw]: AnyApp1At[optionValueToSeq.type, mers.type := V]  { type Y = Seq[String] } =
-    App1 { v: mers.type := V => mers.valueToCmd(v.value) }
-
-  implicit def atBc[V <: bc.Raw]: AnyApp1At[optionValueToSeq.type, bc.type := V]  { type Y = Seq[String] } =
-    App1 {
-       v: bc.type := V => v.value match { case None => Seq(); case Some(f) => Seq(bc.label) ++ bc.valueToCmd(Some(f)) }
-    }
-}
 
 trait AnyJellyfishExpression {
 
@@ -108,6 +70,12 @@ case class JellyfishExpressionOps[FE <: AnyJellyfishExpression](val expr: FE) ex
 
 
 
-[main/scala/jellyfish.scala]: jellyfish.scala.md
-[main/scala/traits.scala]: traits.scala.md
-[test/scala/Jellyfish.scala]: ../../test/scala/Jellyfish.scala.md
+[test/scala/Jellyfish.scala]: ../../../test/scala/Jellyfish.scala.md
+[main/scala/api/options.scala]: options.scala.md
+[main/scala/api/expressions.scala]: expressions.scala.md
+[main/scala/api/commands/histo.scala]: commands/histo.scala.md
+[main/scala/api/commands/queryAll.scala]: commands/queryAll.scala.md
+[main/scala/api/commands/query.scala]: commands/query.scala.md
+[main/scala/api/commands/dump.scala]: commands/dump.scala.md
+[main/scala/api/commands/bc.scala]: commands/bc.scala.md
+[main/scala/api/commands/count.scala]: commands/count.scala.md
