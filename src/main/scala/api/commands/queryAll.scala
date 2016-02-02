@@ -4,7 +4,7 @@ import ohnosequences.jellyfish.api._, options._
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 import better.files._
 
-case object queryAll extends JellyfishCommand {
+case object queryAll extends AnyJellyfishCommand {
 
   // NOTE this is important, don't touch it
   override lazy val name = Seq("jellyfish", "query")

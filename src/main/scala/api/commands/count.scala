@@ -4,7 +4,7 @@ import ohnosequences.jellyfish.api.{ options => opt, _ }
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 import better.files._
 
-case object count extends JellyfishCommand {
+case object count extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
