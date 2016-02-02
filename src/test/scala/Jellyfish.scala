@@ -1,12 +1,13 @@
-package ohnosequences.test
+package ohnosequences.jellyfish.api.test
 
 import org.scalatest.FunSuite
 
-// TODO clean this
-import ohnosequences.jellyfish._
-import better.files._
+import ohnosequences.jellyfish.api._, options._, commands._
 import ohnosequences.cosas._, types._, klists._
+
+import better.files._
 import sys.process._
+
 
 case object testContext {
 
@@ -19,69 +20,69 @@ case object testContext {
   val fastaQ     : File = File("query.fasta")
   val readQuery  : File = File("reads.query")
 
-  val countExpr = JellyfishExpression(jellyfish.count)(
-    jellyfish.count.arguments(
+  val countExpr = JellyfishExpression(commands.count)(
+    commands.count.arguments(
       input(reads)        ::
       output(readsCount)  ::
       *[AnyDenotation]
     ),
-    jellyfish.count.defaults update mer_len(4)
+    commands.count.defaults update mer_len(4)
   )
 
-  val bcExpr = JellyfishExpression(jellyfish.bc)(
-    jellyfish.bc.arguments(
+  val bcExpr = JellyfishExpression(commands.bc)(
+    commands.bc.arguments(
       input(reads)        ::
       output(readsBloom)  ::
       *[AnyDenotation]
     ),
-    jellyfish.bc.defaults
+    commands.bc.defaults
   )
 
-  val countAgainExpr = JellyfishExpression(jellyfish.count)(
-    jellyfish.count.arguments(
+  val countAgainExpr = JellyfishExpression(commands.count)(
+    commands.count.arguments(
       input(reads)        ::
       output(readsCount)  ::
       *[AnyDenotation]
     ),
-    jellyfish.count.defaults update (mer_len(4) :: bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])
+    commands.count.defaults update (mer_len(4) :: options.bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])
   )
 
-  val histoExpr = JellyfishExpression(jellyfish.histo)(
-    jellyfish.histo.arguments(
+  val histoExpr = JellyfishExpression(commands.histo)(
+    commands.histo.arguments(
       input(readsCount)   ::
       output(readsHisto)  ::
       *[AnyDenotation]
     ),
-    jellyfish.histo.defaults
+    commands.histo.defaults
   )
 
-  val dumpExpr = JellyfishExpression(jellyfish.dump)(
-    jellyfish.dump.arguments(
+  val dumpExpr = JellyfishExpression(commands.dump)(
+    commands.dump.arguments(
       input(readsCount) ::
       output(readsDump) ::
       *[AnyDenotation]
     ),
-    jellyfish.dump.defaults
+    commands.dump.defaults
   )
 
-  val queryExpr = JellyfishExpression(jellyfish.query)(
-    jellyfish.query.arguments(
+  val queryExpr = JellyfishExpression(commands.query)(
+    commands.query.arguments(
       input(readsCount) ::
       mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
       output(mersQuery) ::
       *[AnyDenotation]
     ),
-    jellyfish.query.defaults
+    commands.query.defaults
   )
 
-  val queryAllExpr = JellyfishExpression(jellyfish.queryAll)(
-    jellyfish.queryAll.arguments(
+  val queryAllExpr = JellyfishExpression(commands.queryAll)(
+    commands.queryAll.arguments(
       input(readsCount) ::
       sequence(fastaQ)  ::
       output(readQuery) ::
       *[AnyDenotation]
     ),
-    jellyfish.queryAll.defaults
+    commands.queryAll.defaults
   )
 
 }
