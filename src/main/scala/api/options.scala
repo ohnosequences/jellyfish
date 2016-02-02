@@ -13,11 +13,9 @@ trait AnyJellyfishOption extends AnyType {
   val valueToCmd: Raw => Seq[String]
 }
 
-abstract class JellyfishOption[V](val valueToCmd: V => Seq[String]) extends AnyJellyfishOption { type Raw = V }
+abstract class JellyfishOption[V](val valueToCmd: V => Seq[String])
+  extends AnyJellyfishOption { type Raw = V }
 
-case object AnyJellyfishOption {
-  type is[FO <: AnyJellyfishOption] = FO with AnyJellyfishOption { type Raw = FO#Raw }
-}
 
 trait DefaultOptionValueToSeq extends DepFn1[Any, Seq[String]] {
 
@@ -27,6 +25,7 @@ trait DefaultOptionValueToSeq extends DepFn1[Any, Seq[String]] {
   : AnyApp1At[optionValueToSeq.type, FO := V] { type Y = Seq[String] }=
     App1 { v: FO := V => Seq(option.label) ++ option.valueToCmd(v.value).filterNot(_.isEmpty) }
 }
+
 case object optionValueToSeq extends DefaultOptionValueToSeq {
 
   // special cases
@@ -46,6 +45,22 @@ case object optionValueToSeq extends DefaultOptionValueToSeq {
     AnyApp1At[optionValueToSeq.type, O := Boolean] { type Y = Seq[String] } =
     App1 { opt: O := Boolean => if (opt.value) Seq(opt.tpe.label) else Seq() }
 
+}
+
+
+/* This works as a type class, which provides a way of serializing a list of AnyJellyfishOption's */
+trait JellyfishOptionsToSeq[L <: AnyKList.withBound[AnyDenotation]] {
+
+  def apply(l: L): Seq[String]
+}
+
+case object JellyfishOptionsToSeq {
+
+  implicit def default[L <: AnyKList.withBound[AnyDenotation], O <: AnyKList.withBound[Seq[String]]](implicit
+    mapp: AnyApp2At[mapKList[optionValueToSeq.type, Seq[String]], optionValueToSeq.type, L] { type Y = O }
+  ): JellyfishOptionsToSeq[L] = new JellyfishOptionsToSeq[L] {
+      def apply(l: L): Seq[String] = mapp(optionValueToSeq, l).asList.flatten
+  }
 }
 
 

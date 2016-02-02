@@ -11,40 +11,34 @@ case object queryAll extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    input     :×:
-    sequence  :×:
-    output    :×:
+    input    :×:
+    sequence :×:
+    output   :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (input.type := input.Raw)   ::
-    (sequence.type := sequence.Raw)     ::
-    (output.type := output.Raw) ::
+    (input.type    := input.Raw)    ::
+    (sequence.type := sequence.Raw) ::
+    (output.type   := output.Raw)   ::
     *[AnyDenotation]
 
   type Options = options.type
   case object options extends RecordType(
-    load      :×:
-    no_load   :×:
+    load     :×:
+    no_load  :×:
     |[AnyJellyfishOption]
   )
 
   type OptionsVals =
-    (load.type := load.Raw)       ::
+    (load.type    := load.Raw)    ::
     (no_load.type := no_load.Raw) ::
     *[AnyDenotation]
 
   lazy val defaults = options(
-    load(false)     ::
-    no_load(false)  ::
+    load(false)    ::
+    no_load(false) ::
     *[AnyDenotation]
   )
 
-  def apply(
-    argumentValues: ArgumentsVals,
-    optionValues: OptionsVals
-  )
-  : JellyfishExpression[queryAll.type, ArgumentsVals, OptionsVals] =
-    JellyfishExpression(queryAll)(arguments := argumentValues, options := optionValues)
 }

@@ -8,14 +8,14 @@ case object bc extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    input   :×:
-    output  :×:
+    input  :×:
+    output :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (input.type := input.Raw)    ::
-    (output.type := output.Raw)  ::
+    (input.type  := input.Raw)  ::
+    (output.type := output.Raw) ::
     *[AnyDenotation]
 
   type Options = options.type
@@ -24,15 +24,16 @@ case object bc extends AnyJellyfishCommand {
     canonical :×:
     fpr       :×:
     size      :×:
-    threads   :×: |[AnyJellyfishOption]
+    threads   :×:
+    |[AnyJellyfishOption]
   )
 
   type OptionsVals =
-    (mer_len.type := mer_len.Raw)     ::
-    (canonical.type := canonical.Raw) ::
-    (fpr.type := fpr.Raw)             ::
-    (size.type := size.Raw)           ::
-    (threads.type := threads.Raw)     ::
+    (mer_len.type    := mer_len.Raw)   ::
+    (canonical.type  := canonical.Raw) ::
+    (fpr.type        := fpr.Raw)       ::
+    (size.type       := size.Raw)      ::
+    (threads.type    := threads.Raw)   ::
     *[AnyDenotation]
 
   lazy val defaults = options(
@@ -40,13 +41,8 @@ case object bc extends AnyJellyfishCommand {
     canonical(true)         ::
     fpr(0.001)              ::
     size(100000000: BigInt) ::
-    threads(1)              :: *[AnyDenotation]
+    threads(1)              ::
+    *[AnyDenotation]
   )
 
-  def apply(
-    argumentValues: ArgumentsVals,
-    optionValues: OptionsVals
-  )
-  : JellyfishExpression[bc.type, ArgumentsVals, OptionsVals] =
-    JellyfishExpression(bc)(arguments := argumentValues, options := optionValues)
 }

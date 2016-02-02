@@ -8,14 +8,14 @@ case object count extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    opt.input :×:
+    opt.input  :×:
     opt.output :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (opt.input.type := opt.input.Raw)    ::
-    (opt.output.type := opt.output.Raw)  ::
+    (opt.input.type  := opt.input.Raw)  ::
+    (opt.output.type := opt.output.Raw) ::
     *[AnyDenotation]
 
   type Options = options.type
@@ -29,11 +29,11 @@ case object count extends AnyJellyfishCommand {
   )
 
   type OptionsVals =
-    (opt.mer_len.type := opt.mer_len.Raw)      ::
-    (opt.canonical.type := opt.canonical.Raw)  ::
-    (opt.size.type := opt.size.Raw)            ::
-    (opt.bc.type := opt.bc.Raw)                ::
-    (opt.threads.type := opt.threads.Raw)      ::
+    (opt.mer_len.type   := opt.mer_len.Raw)   ::
+    (opt.canonical.type := opt.canonical.Raw) ::
+    (opt.size.type      := opt.size.Raw)      ::
+    (opt.bc.type        := opt.bc.Raw)        ::
+    (opt.threads.type   := opt.threads.Raw)   ::
     *[AnyDenotation]
 
   lazy val defaults = options(
@@ -45,10 +45,4 @@ case object count extends AnyJellyfishCommand {
     *[AnyDenotation]
   )
 
-  def apply(
-    argumentValues: ArgumentsVals,
-    optionValues: OptionsVals
-  )
-  : JellyfishExpression[count.type, ArgumentsVals, OptionsVals] =
-    JellyfishExpression(count)(arguments := argumentValues, options := optionValues)
 }

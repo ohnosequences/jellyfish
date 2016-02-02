@@ -77,22 +77,22 @@ class CommandGeneration extends FunSuite {
 
   // TODO do something with this
   test("jellyfish count") {
-    assert { countExpr.cmd.! == 0 }
+    assert { countExpr.toSeq.! == 0 }
   }
 
   test("jellyfish histo") {
-    assert { histoExpr.cmd.! == 0 }
+    assert { histoExpr.toSeq.! == 0 }
   }
 
   test("jellyfish dump") {
-    assert { dumpExpr.cmd.! == 0 }
+    assert { dumpExpr.toSeq.! == 0 }
   }
 
   test("jellyfish query") {
-    assert { queryExpr.cmd.! == 0 }
+    assert { queryExpr.toSeq.! == 0 }
   }
 
   test("jellyfish queryAll") {
-    assert { queryAllExpr.cmd.! == 0 }
+    assert { queryAllExpr.toSeq.! == 0 }
   }
 }
