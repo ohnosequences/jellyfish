@@ -20,71 +20,56 @@ case object testContext {
   val fastaQ     : File = File("query.fasta")
   val readQuery  : File = File("reads.query")
 
-  val countExpr = JellyfishExpression(commands.count)(
-    commands.count.arguments(
-      input(reads)        ::
-      output(readsCount)  ::
-      *[AnyDenotation]
-    ),
-    commands.count.defaults update mer_len(4)
+  val countExpr = commands.count(
+    input(reads)        ::
+    output(readsCount)  ::
+    *[AnyDenotation],
+    (commands.count.defaults update mer_len(4)).value
   )
 
-  val bcExpr = JellyfishExpression(commands.bc)(
-    commands.bc.arguments(
-      input(reads)        ::
-      output(readsBloom)  ::
-      *[AnyDenotation]
-    ),
-    commands.bc.defaults
+  val bcExpr = commands.bc(
+    input(reads)        ::
+    output(readsBloom)  ::
+    *[AnyDenotation],
+    commands.bc.defaults.value
   )
 
-  val countAgainExpr = JellyfishExpression(commands.count)(
-    commands.count.arguments(
-      input(reads)        ::
-      output(readsCount)  ::
-      *[AnyDenotation]
-    ),
-    commands.count.defaults update (mer_len(4) :: options.bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])
+  val countAgainExpr = commands.count(
+    input(reads)        ::
+    output(readsCount)  ::
+    *[AnyDenotation],
+    (commands.count.defaults update (mer_len(4) :: options.bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])).value
   )
 
-  val histoExpr = JellyfishExpression(commands.histo)(
-    commands.histo.arguments(
+  val histoExpr = commands.histo(
       input(readsCount)   ::
       output(readsHisto)  ::
-      *[AnyDenotation]
-    ),
-    commands.histo.defaults
+      *[AnyDenotation],
+    commands.histo.defaults.value
   )
 
-  val dumpExpr = JellyfishExpression(commands.dump)(
-    commands.dump.arguments(
+  val dumpExpr = commands.dump(
       input(readsCount) ::
       output(readsDump) ::
-      *[AnyDenotation]
-    ),
-    commands.dump.defaults
+      *[AnyDenotation],
+    commands.dump.defaults.value
   )
 
-  val queryExpr = JellyfishExpression(commands.query)(
-    commands.query.arguments(
+  val queryExpr = commands.query(
       input(readsCount) ::
       mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
       output(mersQuery) ::
-      *[AnyDenotation]
-    ),
-    commands.query.defaults
+      *[AnyDenotation],
+    commands.query.defaults.value
   )
 
-  val queryAllExpr = JellyfishExpression(commands.queryAll)(
-    commands.queryAll.arguments(
+  val queryAllExpr = commands.queryAll(
       input(readsCount) ::
       sequence(fastaQ)  ::
       output(readQuery) ::
-      *[AnyDenotation]
-    ),
-    commands.queryAll.defaults
+      *[AnyDenotation],
+    commands.queryAll.defaults.value
   )
-
 }
 
 class CommandGeneration extends FunSuite {
