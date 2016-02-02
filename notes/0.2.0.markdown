@@ -1,0 +1,5 @@
+Several bugfixes and updating the API structure.
+
+- #10 fixed serialization of Boolean options
+- #8 use math.BigInt for int64 options
+- #9 commands have now apply methods and options are in separate namespaces
