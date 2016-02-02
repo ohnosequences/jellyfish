@@ -8,8 +8,8 @@ case object dump extends JellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    input :×:
-    output :×:
+    input   :×:
+    output  :×:
     |[AnyJellyfishOption]
   )
 

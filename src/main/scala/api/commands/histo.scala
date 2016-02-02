@@ -13,6 +13,11 @@ case object histo extends JellyfishCommand {
     |[AnyJellyfishOption]
   )
 
+  type ArgumentsVals =
+    (input.type := input.Raw)    ::
+    (output.type := output.Raw)  ::
+    *[AnyDenotation]
+
   type Options = options.type
   case object options extends RecordType(
     low       :×:
@@ -22,6 +27,14 @@ case object histo extends JellyfishCommand {
     full      :×: |[AnyJellyfishOption]
   )
 
+  type OptionsVals =
+    (low.type := low.Raw)             ::
+    (high.type := high.Raw)           ::
+    (threads.type := threads.Raw)     ::
+    (increment.type := increment.Raw) ::
+    (full.type := full.Raw)           ::
+    *[AnyDenotation]
+
   lazy val defaults = options(
     low(1L)       ::
     high(10000L)  ::
@@ -29,4 +42,11 @@ case object histo extends JellyfishCommand {
     increment(1L) ::
     full(false)   :: *[AnyDenotation]
   )
+
+  def apply(
+    argumentValues: ArgumentsVals,
+    optionValues: OptionsVals
+  )
+  : JellyfishExpression[histo.type, ArgumentsVals, OptionsVals] =
+    JellyfishExpression(histo)(arguments := argumentValues, options := optionValues)
 }
