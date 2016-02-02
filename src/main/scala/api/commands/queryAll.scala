@@ -1,6 +1,6 @@
-package ohnosequences.jellyfish.api.commands
+package ohnosequences.jellyfish.api.jellyfish
 
-import ohnosequences.jellyfish.api._, options._
+import ohnosequences.jellyfish.api._, opt._
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 import better.files._
 
