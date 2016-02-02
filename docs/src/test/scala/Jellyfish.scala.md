@@ -1,14 +1,15 @@
 
 ```scala
-package ohnosequences.test
+package ohnosequences.jellyfish.api.test
 
 import org.scalatest.FunSuite
 
-// TODO clean this
-import ohnosequences.jellyfish._
-import better.files._
+import ohnosequences.jellyfish.api._, options._, commands._
 import ohnosequences.cosas._, types._, klists._
+
+import better.files._
 import sys.process._
+
 
 case object testContext {
 
@@ -21,71 +22,56 @@ case object testContext {
   val fastaQ     : File = File("query.fasta")
   val readQuery  : File = File("reads.query")
 
-  val countExpr = JellyfishExpression(jellyfish.count)(
-    jellyfish.count.arguments(
-      input(reads)        ::
-      output(readsCount)  ::
-      *[AnyDenotation]
-    ),
-    jellyfish.count.defaults update mer_len(4)
+  val countExpr = commands.count(
+    input(reads)        ::
+    output(readsCount)  ::
+    *[AnyDenotation],
+    (commands.count.defaults update mer_len(4)).value
   )
 
-  val bcExpr = JellyfishExpression(jellyfish.bc)(
-    jellyfish.bc.arguments(
-      input(reads)        ::
-      output(readsBloom)  ::
-      *[AnyDenotation]
-    ),
-    jellyfish.bc.defaults
+  val bcExpr = commands.bc(
+    input(reads)        ::
+    output(readsBloom)  ::
+    *[AnyDenotation],
+    commands.bc.defaults.value
   )
 
-  val countAgainExpr = JellyfishExpression(jellyfish.count)(
-    jellyfish.count.arguments(
-      input(reads)        ::
-      output(readsCount)  ::
-      *[AnyDenotation]
-    ),
-    jellyfish.count.defaults update (mer_len(4) :: bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])
+  val countAgainExpr = commands.count(
+    input(reads)        ::
+    output(readsCount)  ::
+    *[AnyDenotation],
+    (commands.count.defaults update (mer_len(4) :: options.bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])).value
   )
 
-  val histoExpr = JellyfishExpression(jellyfish.histo)(
-    jellyfish.histo.arguments(
+  val histoExpr = commands.histo(
       input(readsCount)   ::
       output(readsHisto)  ::
-      *[AnyDenotation]
-    ),
-    jellyfish.histo.defaults
+      *[AnyDenotation],
+    commands.histo.defaults.value
   )
 
-  val dumpExpr = JellyfishExpression(jellyfish.dump)(
-    jellyfish.dump.arguments(
+  val dumpExpr = commands.dump(
       input(readsCount) ::
       output(readsDump) ::
-      *[AnyDenotation]
-    ),
-    jellyfish.dump.defaults
+      *[AnyDenotation],
+    commands.dump.defaults.value
   )
 
-  val queryExpr = JellyfishExpression(jellyfish.query)(
-    jellyfish.query.arguments(
+  val queryExpr = commands.query(
       input(readsCount) ::
       mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
       output(mersQuery) ::
-      *[AnyDenotation]
-    ),
-    jellyfish.query.defaults
+      *[AnyDenotation],
+    commands.query.defaults.value
   )
 
-  val queryAllExpr = JellyfishExpression(jellyfish.queryAll)(
-    jellyfish.queryAll.arguments(
+  val queryAllExpr = commands.queryAll(
       input(readsCount) ::
       sequence(fastaQ)  ::
       output(readQuery) ::
-      *[AnyDenotation]
-    ),
-    jellyfish.queryAll.defaults
+      *[AnyDenotation],
+    commands.queryAll.defaults.value
   )
-
 }
 
 class CommandGeneration extends FunSuite {
@@ -118,6 +104,12 @@ class CommandGeneration extends FunSuite {
 
 
 
-[main/scala/jellyfish.scala]: ../../main/scala/jellyfish.scala.md
-[main/scala/traits.scala]: ../../main/scala/traits.scala.md
 [test/scala/Jellyfish.scala]: Jellyfish.scala.md
+[main/scala/api/options.scala]: ../../main/scala/api/options.scala.md
+[main/scala/api/expressions.scala]: ../../main/scala/api/expressions.scala.md
+[main/scala/api/commands/histo.scala]: ../../main/scala/api/commands/histo.scala.md
+[main/scala/api/commands/queryAll.scala]: ../../main/scala/api/commands/queryAll.scala.md
+[main/scala/api/commands/query.scala]: ../../main/scala/api/commands/query.scala.md
+[main/scala/api/commands/dump.scala]: ../../main/scala/api/commands/dump.scala.md
+[main/scala/api/commands/bc.scala]: ../../main/scala/api/commands/bc.scala.md
+[main/scala/api/commands/count.scala]: ../../main/scala/api/commands/count.scala.md
