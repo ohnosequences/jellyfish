@@ -2,7 +2,7 @@ package ohnosequences.jellyfish.api.test
 
 import org.scalatest.FunSuite
 
-import ohnosequences.jellyfish.api._, options._, commands._
+import ohnosequences.jellyfish.api._, opt._
 import ohnosequences.cosas._, types._, klists._
 
 import better.files._
@@ -11,64 +11,72 @@ import sys.process._
 
 case object testContext {
 
-  val reads      : File = File("reads.fasta")
-  val readsBloom : File = File("reads.bloom")
-  val readsCount : File = File("reads.count")
-  val readsHisto : File = File("reads.histo")
-  val readsDump  : File = File("reads.dump")
-  val mersQuery  : File = File("mers.query")
-  val fastaQ     : File = File("query.fasta")
-  val readQuery  : File = File("reads.query")
+  def resourceFile(suffix: String): File =
+    File(getClass.getResource(s"/${suffix}").getPath)
 
-  val countExpr = commands.count(
+  lazy val reads:      File = resourceFile("reads.fasta")
+  lazy val readsBloom: File = resourceFile("reads.bloom")
+  lazy val readsCount: File = resourceFile("reads.count")
+  lazy val readsHisto: File = resourceFile("reads.histo")
+  lazy val readsDump:  File = resourceFile("reads.dump")
+  lazy val mersQuery:  File = resourceFile("mers.query")
+  lazy val fastaQ:     File = resourceFile("query.fasta")
+  lazy val readQuery:  File = resourceFile("reads.query")
+
+
+  lazy val countExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
     *[AnyDenotation],
-    (commands.count.defaults update mer_len(4)).value
+    (jellyfish.count.defaults update opt.mer_len(4)).value
   )
 
-  val bcExpr = commands.bc(
+  lazy val bcExpr = jellyfish.bc(
     input(reads)        ::
     output(readsBloom)  ::
     *[AnyDenotation],
-    commands.bc.defaults.value
+    jellyfish.bc.defaults.value
   )
 
-  val countAgainExpr = commands.count(
+  lazy val countAgainExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
     *[AnyDenotation],
-    (commands.count.defaults update (mer_len(4) :: options.bc(Some(readsBloom) : Option[File]) :: *[AnyDenotation])).value
+    jellyfish.count.defaults.update(
+      opt.mer_len(4) ::
+      opt.bc(Some(readsBloom) : Option[File]) ::
+      *[AnyDenotation]
+    ).value
   )
 
-  val histoExpr = commands.histo(
+  lazy val histoExpr = jellyfish.histo(
       input(readsCount)   ::
       output(readsHisto)  ::
       *[AnyDenotation],
-    commands.histo.defaults.value
+    jellyfish.histo.defaults.value
   )
 
-  val dumpExpr = commands.dump(
+  lazy val dumpExpr = jellyfish.dump(
       input(readsCount) ::
       output(readsDump) ::
       *[AnyDenotation],
-    commands.dump.defaults.value
+    jellyfish.dump.defaults.value
   )
 
-  val queryExpr = commands.query(
+  lazy val queryExpr = jellyfish.query(
       input(readsCount) ::
       mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
       output(mersQuery) ::
       *[AnyDenotation],
-    commands.query.defaults.value
+    jellyfish.query.defaults.value
   )
 
-  val queryAllExpr = commands.queryAll(
+  lazy val queryAllExpr = jellyfish.queryAll(
       input(readsCount) ::
       sequence(fastaQ)  ::
       output(readQuery) ::
       *[AnyDenotation],
-    commands.queryAll.defaults.value
+    jellyfish.queryAll.defaults.value
   )
 }
 
@@ -77,22 +85,22 @@ class CommandGeneration extends FunSuite {
 
   // TODO do something with this
   test("jellyfish count") {
-    assert { countExpr.cmd.! == 0 }
+    assert { countExpr.toSeq.! == 0 }
   }
 
   test("jellyfish histo") {
-    assert { histoExpr.cmd.! == 0 }
+    assert { histoExpr.toSeq.! == 0 }
   }
 
   test("jellyfish dump") {
-    assert { dumpExpr.cmd.! == 0 }
+    assert { dumpExpr.toSeq.! == 0 }
   }
 
   test("jellyfish query") {
-    assert { queryExpr.cmd.! == 0 }
+    assert { queryExpr.toSeq.! == 0 }
   }
 
   test("jellyfish queryAll") {
-    assert { queryAllExpr.cmd.! == 0 }
+    assert { queryAllExpr.toSeq.! == 0 }
   }
 }
