@@ -11,30 +11,34 @@ import sys.process._
 
 case object testContext {
 
-  val reads      : File = File("reads.fasta")
-  val readsBloom : File = File("reads.bloom")
-  val readsCount : File = File("reads.count")
-  val readsHisto : File = File("reads.histo")
-  val readsDump  : File = File("reads.dump")
-  val mersQuery  : File = File("mers.query")
-  val fastaQ     : File = File("query.fasta")
-  val readQuery  : File = File("reads.query")
+  def resourceFile(suffix: String): File =
+    File(getClass.getResource(s"/${suffix}").getPath)
 
-  val countExpr = jellyfish.count(
+  lazy val reads:      File = resourceFile("reads.fasta")
+  lazy val readsBloom: File = resourceFile("reads.bloom")
+  lazy val readsCount: File = resourceFile("reads.count")
+  lazy val readsHisto: File = resourceFile("reads.histo")
+  lazy val readsDump:  File = resourceFile("reads.dump")
+  lazy val mersQuery:  File = resourceFile("mers.query")
+  lazy val fastaQ:     File = resourceFile("query.fasta")
+  lazy val readQuery:  File = resourceFile("reads.query")
+
+
+  lazy val countExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
     *[AnyDenotation],
     (jellyfish.count.defaults update opt.mer_len(4)).value
   )
 
-  val bcExpr = jellyfish.bc(
+  lazy val bcExpr = jellyfish.bc(
     input(reads)        ::
     output(readsBloom)  ::
     *[AnyDenotation],
     jellyfish.bc.defaults.value
   )
 
-  val countAgainExpr = jellyfish.count(
+  lazy val countAgainExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
     *[AnyDenotation],
@@ -45,21 +49,21 @@ case object testContext {
     ).value
   )
 
-  val histoExpr = jellyfish.histo(
+  lazy val histoExpr = jellyfish.histo(
       input(readsCount)   ::
       output(readsHisto)  ::
       *[AnyDenotation],
     jellyfish.histo.defaults.value
   )
 
-  val dumpExpr = jellyfish.dump(
+  lazy val dumpExpr = jellyfish.dump(
       input(readsCount) ::
       output(readsDump) ::
       *[AnyDenotation],
     jellyfish.dump.defaults.value
   )
 
-  val queryExpr = jellyfish.query(
+  lazy val queryExpr = jellyfish.query(
       input(readsCount) ::
       mers(Seq("ATCT", "AATC", "TTAT", "ATCG")) ::
       output(mersQuery) ::
@@ -67,7 +71,7 @@ case object testContext {
     jellyfish.query.defaults.value
   )
 
-  val queryAllExpr = jellyfish.queryAll(
+  lazy val queryAllExpr = jellyfish.queryAll(
       input(readsCount) ::
       sequence(fastaQ)  ::
       output(readQuery) ::
