@@ -11,8 +11,12 @@ import sys.process._
 
 case object testContext {
 
-  def resourceFile(suffix: String): File =
-    File(getClass.getResource(s"/${suffix}").getPath)
+  def resourceFile(fileName: String): File = {
+
+    val cl = this.getClass.getClassLoader
+    // File( cl.getResource(s"/${fileName}").getPath )
+    File(s"src/test/resources/${fileName}")
+  }
 
   lazy val reads:      File = resourceFile("reads.fasta")
   lazy val readsBloom: File = resourceFile("reads.bloom")
@@ -27,13 +31,17 @@ case object testContext {
   lazy val countExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
+    mer_len(4)          ::
+    size(1000: BigInt)  ::
     *[AnyDenotation],
-    (jellyfish.count.defaults update opt.mer_len(4)).value
+    jellyfish.count.defaults.value
   )
 
   lazy val bcExpr = jellyfish.bc(
     input(reads)        ::
     output(readsBloom)  ::
+    mer_len(4)          ::
+    size(1000: BigInt)  ::
     *[AnyDenotation],
     jellyfish.bc.defaults.value
   )
@@ -41,12 +49,10 @@ case object testContext {
   lazy val countAgainExpr = jellyfish.count(
     input(reads)        ::
     output(readsCount)  ::
+    mer_len(4)          ::
+    size(1000: BigInt)  ::
     *[AnyDenotation],
-    jellyfish.count.defaults.update(
-      opt.mer_len(4) ::
-      opt.bc(Some(readsBloom) : Option[File]) ::
-      *[AnyDenotation]
-    ).value
+    jellyfish.count.defaults.update( opt.bc(Some(readsBloom) : Option[File])).value
   )
 
   lazy val histoExpr = jellyfish.histo(
