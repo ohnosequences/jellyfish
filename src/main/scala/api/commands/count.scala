@@ -8,38 +8,36 @@ case object count extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    input  :×:
-    output :×:
+    input   :×:
+    output  :×:
+    mer_len :×:
+    size    :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (input.type  := input.Raw)  ::
-    (output.type := output.Raw) ::
+    (input.type   := input.Raw)   ::
+    (output.type  := output.Raw)  ::
+    (mer_len.type := mer_len.Raw) ::
+    (size.type    := size.Raw)    ::
     *[AnyDenotation]
 
   type Options = options.type
   case object options extends RecordType(
-    mer_len   :×:
     canonical :×:
-    size      :×:
     opt.bc    :×:
     threads   :×:
     |[AnyJellyfishOption]
   )
 
   type OptionsVals =
-    (mer_len.type   := mer_len.Raw)   ::
     (canonical.type := canonical.Raw) ::
-    (size.type      := size.Raw)      ::
     (opt.bc.type    := opt.bc.Raw)    ::
     (threads.type   := threads.Raw)   ::
     *[AnyDenotation]
 
   lazy val defaults = options(
-    mer_len(24)                ::
-    canonical(true)            ::
-    size(100000000: BigInt)    ::
+    canonical(false)           ::
     opt.bc(None: Option[File]) ::
     threads(1)                 ::
     *[AnyDenotation]
