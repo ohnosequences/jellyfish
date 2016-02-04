@@ -13,9 +13,8 @@ case object testContext {
 
   def resourceFile(fileName: String): File = {
 
-    val cl = this.getClass.getClassLoader
-    // File( cl.getResource(s"/${fileName}").getPath )
-    File(s"src/test/resources/${fileName}")
+    val cl = this.getClass
+    File( cl.getResource(s"/${fileName}").getPath )
   }
 
   lazy val reads:      File = resourceFile("reads.fasta")
