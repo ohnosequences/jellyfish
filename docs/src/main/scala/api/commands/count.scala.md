@@ -1,58 +1,50 @@
 
 ```scala
-package ohnosequences.jellyfish.api.commands
+package ohnosequences.jellyfish.api.jellyfish
 
-import ohnosequences.jellyfish.api.{ options => opt, _ }
+import ohnosequences.jellyfish.api._, opt._
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 import better.files._
 
-case object count extends JellyfishCommand {
+case object count extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    opt.input :×:
-    opt.output :×:
+    input   :×:
+    output  :×:
+    mer_len :×:
+    size    :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (opt.input.type := opt.input.Raw)    ::
-    (opt.output.type := opt.output.Raw)  ::
+    (input.type   := input.Raw)   ::
+    (output.type  := output.Raw)  ::
+    (mer_len.type := mer_len.Raw) ::
+    (size.type    := size.Raw)    ::
     *[AnyDenotation]
 
   type Options = options.type
   case object options extends RecordType(
-    opt.mer_len   :×:
-    opt.canonical :×:
-    opt.size      :×:
-    opt.bc        :×:
-    opt.threads   :×:
+    canonical :×:
+    opt.bc    :×:
+    threads   :×:
     |[AnyJellyfishOption]
   )
 
   type OptionsVals =
-    (opt.mer_len.type := opt.mer_len.Raw)      ::
-    (opt.canonical.type := opt.canonical.Raw)  ::
-    (opt.size.type := opt.size.Raw)            ::
-    (opt.bc.type := opt.bc.Raw)                ::
-    (opt.threads.type := opt.threads.Raw)      ::
+    (canonical.type := canonical.Raw) ::
+    (opt.bc.type    := opt.bc.Raw)    ::
+    (threads.type   := threads.Raw)   ::
     *[AnyDenotation]
 
   lazy val defaults = options(
-    opt.mer_len(24)             ::
-    opt.canonical(true)         ::
-    opt.size(100000000: BigInt) ::
-    opt.bc(None: Option[File])  ::
-    opt.threads(1)              ::
+    canonical(false)           ::
+    opt.bc(None: Option[File]) ::
+    threads(1)                 ::
     *[AnyDenotation]
   )
 
-  def apply(
-    argumentValues: ArgumentsVals,
-    optionValues: OptionsVals
-  )
-  : JellyfishExpression[count.type, ArgumentsVals, OptionsVals] =
-    JellyfishExpression(count)(arguments := argumentValues, options := optionValues)
 }
 
 ```
@@ -62,6 +54,7 @@ case object count extends JellyfishCommand {
 
 [test/scala/Jellyfish.scala]: ../../../../test/scala/Jellyfish.scala.md
 [main/scala/api/options.scala]: ../options.scala.md
+[main/scala/api/package.scala]: ../package.scala.md
 [main/scala/api/expressions.scala]: ../expressions.scala.md
 [main/scala/api/commands/histo.scala]: histo.scala.md
 [main/scala/api/commands/queryAll.scala]: queryAll.scala.md
