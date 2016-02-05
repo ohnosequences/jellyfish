@@ -1,0 +1,5 @@
+This release significantly changes the code layout and reduces the implicit baggage required to use commands. Other significant changes:
+
+- add travis configuration
+- add codacy coverage plugin
+- fixed defaults for commands to be those of the cmdline tool
