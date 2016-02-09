@@ -37,7 +37,7 @@ case object dump extends AnyJellyfishCommand {
   lazy val defaults = options(
     column(false)                ::
     tab(false)                   ::
-    lower_count(1)               ::
+    lower_count(uint64(1))       ::
     upper_count(uint64.MaxValue) ::
     *[AnyDenotation]
   )

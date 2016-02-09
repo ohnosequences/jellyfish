@@ -32,7 +32,7 @@ case object merge extends AnyJellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    lower_count(1)               ::
+    lower_count(uint64(1))       ::
     upper_count(uint64.MaxValue) ::
     *[AnyDenotation]
   )
