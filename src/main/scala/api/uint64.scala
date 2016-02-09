@@ -6,6 +6,12 @@ case class uint64(private val input: BigInt) {
   //  so we take abs of the passes BigInt and compare it to the MaxValue
   def value: BigInt =
     uint64.MaxValue.input.min(input.abs)
+    // NOTE: .abs is arguable, probably this is a more intuitive convention:
+    // uint64.MaxValue.input.min(
+    //   uint64.MinValue.input.max(
+    //     input
+    //   )
+    // )
 
   override def toString = this.value.toString
 }
