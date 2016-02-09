@@ -19,8 +19,7 @@ package object api {
   type uint64 = BigInt
   case object uint64 {
     val MinValue: uint64 = BigInt(0)
-    // FIXME: this is not a max value of uint64:
-    val MaxValue: uint64 = BigInt("4294967295")
+    val MaxValue: uint64 = BigInt(Long.MaxValue) * 2
   }
 
 }
