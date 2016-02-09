@@ -1,0 +1,3 @@
+- Added `merge` command that merged several jellyfish databases in one (with an optional count filter)
+- Added `uint64` type based on `BigInt` to pass only valid uint64 values to jellyfish
+- All options that had `Raw` type `BigInt` are changed to `uint64`
