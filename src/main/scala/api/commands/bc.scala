@@ -37,9 +37,9 @@ case object bc extends AnyJellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    canonical(false)        ::
-    fpr(0.001)              ::
-    threads(1)              ::
+    canonical(false) ::
+    fpr(0.001)       ::
+    threads(1)       ::
     *[AnyDenotation]
   )
 

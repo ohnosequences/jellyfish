@@ -4,42 +4,36 @@ import ohnosequences.jellyfish.api._, opt._
 import ohnosequences.cosas._, types._, records._, fns._, klists._
 import better.files._
 
-case object count extends AnyJellyfishCommand {
+/* Merge jellyfish databases */
+case object merge extends AnyJellyfishCommand {
 
   type Arguments = arguments.type
   case object arguments extends RecordType(
-    input   :×:
-    output  :×:
-    mer_len :×:
-    size    :×:
+    inputs :×:
+    output :×:
     |[AnyJellyfishOption]
   )
 
   type ArgumentsVals =
-    (input.type   := input.Raw)   ::
-    (output.type  := output.Raw)  ::
-    (mer_len.type := mer_len.Raw) ::
-    (size.type    := size.Raw)    ::
+    (inputs.type := inputs.Raw)  ::
+    (output.type := output.Raw) ::
     *[AnyDenotation]
 
   type Options = options.type
   case object options extends RecordType(
-    canonical :×:
-    opt.bc    :×:
-    threads   :×:
+    lower_count :×:
+    upper_count :×:
     |[AnyJellyfishOption]
   )
 
   type OptionsVals =
-    (canonical.type := canonical.Raw) ::
-    (opt.bc.type    := opt.bc.Raw)    ::
-    (threads.type   := threads.Raw)   ::
+    (lower_count.type := lower_count.Raw) ::
+    (upper_count.type := upper_count.Raw) ::
     *[AnyDenotation]
 
   lazy val defaults = options(
-    canonical(false) ::
-    opt.bc(None)     ::
-    threads(1)       ::
+    lower_count(1)               ::
+    upper_count(uint64.MaxValue) ::
     *[AnyDenotation]
   )
 
