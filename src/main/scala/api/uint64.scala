@@ -14,6 +14,9 @@ case class uint64(private val input: BigInt) {
     // )
 
   override def toString = this.value.toString
+
+  // just an alias:
+  def apply(str: String): uint64 = uint64(BigInt(str))
 }
 
 case object uint64 {
