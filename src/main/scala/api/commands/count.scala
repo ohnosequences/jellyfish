@@ -37,9 +37,9 @@ case object count extends AnyJellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    canonical(false)           ::
-    opt.bc(None: Option[File]) ::
-    threads(1)                 ::
+    canonical(false) ::
+    opt.bc(None)     ::
+    threads(1)       ::
     *[AnyDenotation]
   )
 

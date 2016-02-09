@@ -1,6 +1,6 @@
 package ohnosequences.jellyfish.api
 
-import ohnosequences.cosas._, types._, records._, fns._, klists._
+import ohnosequences.cosas._, types._, fns._, klists._
 import better.files._
 
 trait AnyJellyfishOption extends AnyType {
@@ -10,6 +10,20 @@ trait AnyJellyfishOption extends AnyType {
   lazy val label: String = s"--${cmdName}"
 
   val valueToCmd: Raw => Seq[String]
+}
+
+case object AnyJellyfishOption {
+
+  implicit def jellyfishOptionOps[Opt <: AnyJellyfishOption](opt: Opt):
+    JellyfishOptionOps[Opt] =
+    JellyfishOptionOps[Opt](opt)
+}
+
+case class JellyfishOptionOps[Opt <: AnyJellyfishOption](opt: Opt) extends AnyVal {
+
+  // NOTE: this apply gets rid of unnecessary covarience in Raw
+  def apply(v: Opt#Raw): Opt := Opt#Raw =
+    (opt: Opt) := v
 }
 
 abstract class JellyfishOption[V](val valueToCmd: V => Seq[String])
@@ -73,18 +87,19 @@ case object opt {
   case object load        extends JellyfishOption[Boolean](x => Seq())
   case object no_load     extends JellyfishOption[Boolean](x => Seq())
   case object input       extends JellyfishOption[File](x => Seq(x.path.toString))
+  case object inputs      extends JellyfishOption[Seq[File]](x => x.map{ _.path.toString })
   case object output      extends JellyfishOption[File](x => Seq(x.path.toString))
   case object mer_len     extends JellyfishOption[Int](x => Seq(x.toString))
-  case object size        extends JellyfishOption[BigInt](x => Seq(x.toString))
+  case object size        extends JellyfishOption[uint64](x => Seq(x.toString))
   case object threads     extends JellyfishOption[Int](x => Seq(x.toString))
   case object canonical   extends JellyfishOption[Boolean](x => Seq())
   case object column      extends JellyfishOption[Boolean](x => Seq())
   case object tab         extends JellyfishOption[Boolean](x => Seq())
-  case object lower_count extends JellyfishOption[BigInt](x => Seq(x.toString))
-  case object upper_count extends JellyfishOption[BigInt](x => Seq(x.toString))
-  case object low         extends JellyfishOption[BigInt](x => Seq(x.toString)) // (1)
-  case object high        extends JellyfishOption[BigInt](x => Seq(x.toString)) // (10000)
-  case object increment   extends JellyfishOption[BigInt](x => Seq(x.toString)) //  Increment value for buckets (1)
+  case object lower_count extends JellyfishOption[uint64](x => Seq(x.toString))
+  case object upper_count extends JellyfishOption[uint64](x => Seq(x.toString))
+  case object low         extends JellyfishOption[uint64](x => Seq(x.toString)) // (1)
+  case object high        extends JellyfishOption[uint64](x => Seq(x.toString)) // (10000)
+  case object increment   extends JellyfishOption[uint64](x => Seq(x.toString)) //  Increment value for buckets (1)
   case object full        extends JellyfishOption[Boolean](x => Seq()) // Don't skip count 0. (false)
   case object fpr         extends JellyfishOption[Double](x => Seq(x.toString))
   case object bc          extends JellyfishOption[Option[File]]({

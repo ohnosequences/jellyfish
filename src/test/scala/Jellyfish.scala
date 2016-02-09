@@ -31,7 +31,7 @@ case object testContext {
     input(reads)        ::
     output(readsCount)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.count.defaults.value
   )
@@ -40,7 +40,7 @@ case object testContext {
     input(reads)        ::
     output(readsBloom)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.bc.defaults.value
   )
@@ -49,7 +49,7 @@ case object testContext {
     input(reads)        ::
     output(readsCount)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.count.defaults.update( opt.bc(Some(readsBloom) : Option[File])).value
   )

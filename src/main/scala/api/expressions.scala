@@ -1,6 +1,6 @@
 package ohnosequences.jellyfish.api
 
-import ohnosequences.cosas._, types._, records._, fns._, klists._
+import ohnosequences.cosas._, types._
 
 trait AnyJellyfishCommand { cmd =>
 

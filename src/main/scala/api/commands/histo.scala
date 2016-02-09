@@ -37,10 +37,10 @@ case object histo extends AnyJellyfishCommand {
     *[AnyDenotation]
 
   lazy val defaults = options(
-    low(1: BigInt)       ::
-    high(10000: BigInt)  ::
+    low(uint64(1))       ::
+    high(uint64(10000))  ::
     threads(1)           ::
-    increment(1: BigInt) ::
+    increment(uint64(1)) ::
     full(false)          ::
     *[AnyDenotation]
   )

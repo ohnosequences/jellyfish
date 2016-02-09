@@ -1,7 +1,6 @@
 package ohnosequences.jellyfish
 
-import ohnosequences.cosas._, types._, records._, fns._, klists._, typeUnions._
-// import better.files._
+import ohnosequences.cosas._, types._, records._, klists._
 
 package object api {
 
