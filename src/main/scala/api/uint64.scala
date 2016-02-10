@@ -22,5 +22,5 @@ case class uint64(private val input: BigInt) {
 case object uint64 {
 
   val MinValue: uint64 = uint64(0)
-  val MaxValue: uint64 = uint64(BigInt(Long.MaxValue) * 2)
+  val MaxValue: uint64 = uint64(BigInt(Long.MaxValue) * 2 + 1)
 }
