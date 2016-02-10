@@ -15,7 +15,7 @@ case object merge extends AnyJellyfishCommand {
   )
 
   type ArgumentsVals =
-    (inputs.type := inputs.Raw)  ::
+    (inputs.type := inputs.Raw) ::
     (output.type := output.Raw) ::
     *[AnyDenotation]
 

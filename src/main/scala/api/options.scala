@@ -46,6 +46,9 @@ case object optionValueToSeq extends DefaultOptionValueToSeq {
   implicit def atInput[V <: opt.input.Raw]: AnyApp1At[optionValueToSeq.type, opt.input.type := V] { type Y  = Seq[String] } =
     App1 { v: opt.input.type := V => opt.input.valueToCmd(v.value) }
 
+  implicit def atInputs[V <: opt.inputs.Raw]: AnyApp1At[optionValueToSeq.type, opt.inputs.type := V]  { type Y = Seq[String] } =
+    App1 { v: opt.inputs.type := V => opt.inputs.valueToCmd(v.value) }
+
   implicit def atMers[V <: opt.mers.Raw]: AnyApp1At[optionValueToSeq.type, opt.mers.type := V]  { type Y = Seq[String] } =
     App1 { v: opt.mers.type := V => opt.mers.valueToCmd(v.value) }
 
