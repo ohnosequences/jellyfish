@@ -4,7 +4,7 @@ name          := "jellyfish-api"
 organization  := "ohnosequences"
 description   := "A Scala typesafe API for Jellyfish"
 
-bucketSuffix  := "era7.com"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   "ohnosequences"         %% "cosas"        % "0.8.0",
@@ -12,3 +12,5 @@ libraryDependencies ++= Seq(
   // "com.github.tototoshi"  %% "scala-csv"    % "1.2.2" % Test,
   "org.scalatest"         %% "scalatest"    % "2.2.5" % Test
 )
+
+bucketSuffix  := "era7.com"
