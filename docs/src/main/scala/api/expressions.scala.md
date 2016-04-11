@@ -2,7 +2,7 @@
 ```scala
 package ohnosequences.jellyfish.api
 
-import ohnosequences.cosas._, types._, records._, fns._, klists._
+import ohnosequences.cosas._, types._
 
 trait AnyJellyfishCommand { cmd =>
 
@@ -76,9 +76,11 @@ case class JellyfishExpression[Cmd <: AnyJellyfishCommand](val command: Cmd)(
 [main/scala/api/options.scala]: options.scala.md
 [main/scala/api/package.scala]: package.scala.md
 [main/scala/api/expressions.scala]: expressions.scala.md
+[main/scala/api/uint64.scala]: uint64.scala.md
 [main/scala/api/commands/histo.scala]: commands/histo.scala.md
 [main/scala/api/commands/queryAll.scala]: commands/queryAll.scala.md
 [main/scala/api/commands/query.scala]: commands/query.scala.md
 [main/scala/api/commands/dump.scala]: commands/dump.scala.md
+[main/scala/api/commands/merge.scala]: commands/merge.scala.md
 [main/scala/api/commands/bc.scala]: commands/bc.scala.md
 [main/scala/api/commands/count.scala]: commands/count.scala.md

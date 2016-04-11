@@ -1,27 +1,30 @@
 
 ```scala
-package ohnosequences.jellyfish
+package ohnosequences.jellyfish.api
 
-import ohnosequences.cosas._, types._, records._, klists._
+case class uint64(private val input: BigInt) {
 
-package object api {
+  // NOTE: it is important not to pass to jellyfish an invalid value,
+  //  so we take abs of the passes BigInt and compare it to the MaxValue
+  def value: BigInt =
+    uint64.MaxValue.input.min(input.abs)
+    // NOTE: .abs is arguable, probably this is a more intuitive convention:
+    // uint64.MaxValue.input.min(
+    //   uint64.MinValue.input.max(
+    //     input
+    //   )
+    // )
 
-  type AnyJellyfishOptionsRecord =
-    AnyRecordType {
-      type Keys <: AnyProductType {
-        type Types <: AnyKList.Of[AnyJellyfishOption]
-      }
-    }
+  override def toString = this.value.toString
 
-  implicit def jellyfishOptionsOps[L <: AnyKList.withBound[AnyDenotation]](l: L):
-    JellyfishOptionsOps[L] =
-    JellyfishOptionsOps[L](l)
-
+  // just an alias:
+  def apply(str: String): uint64 = uint64(BigInt(str))
 }
 
-case class JellyfishOptionsOps[L <: AnyKList.withBound[AnyDenotation]](val l: L) extends AnyVal {
+case object uint64 {
 
-  def toSeq(implicit opsToSeq: api.JellyfishOptionsToSeq[L]): Seq[String] = opsToSeq(l)
+  val MinValue: uint64 = uint64(0)
+  val MaxValue: uint64 = uint64(BigInt(Long.MaxValue) * 2 + 1)
 }
 
 ```

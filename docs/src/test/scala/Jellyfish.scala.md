@@ -13,15 +13,13 @@ import sys.process._
 
 case object testContext {
 
-  def resourceFile(fileName: String): File = {
-
-    val cl = this.getClass
-    File( cl.getResource(s"/${fileName}").getPath )
-  }
+  def resourceFile(fileName: String): File =
+    file"src/test/resources/${fileName}"
 
   lazy val reads:      File = resourceFile("reads.fasta")
   lazy val readsBloom: File = resourceFile("reads.bloom")
   lazy val readsCount: File = resourceFile("reads.count")
+  lazy val readsCountM: File = resourceFile("reads.merged.count")
   lazy val readsHisto: File = resourceFile("reads.histo")
   lazy val readsDump:  File = resourceFile("reads.dump")
   lazy val mersQuery:  File = resourceFile("mers.query")
@@ -33,7 +31,7 @@ case object testContext {
     input(reads)        ::
     output(readsCount)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.count.defaults.value
   )
@@ -42,7 +40,7 @@ case object testContext {
     input(reads)        ::
     output(readsBloom)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.bc.defaults.value
   )
@@ -51,7 +49,7 @@ case object testContext {
     input(reads)        ::
     output(readsCount)  ::
     mer_len(4)          ::
-    size(1000: BigInt)  ::
+    size(uint64(1000))  ::
     *[AnyDenotation],
     jellyfish.count.defaults.update( opt.bc(Some(readsBloom) : Option[File])).value
   )
@@ -85,6 +83,14 @@ case object testContext {
       *[AnyDenotation],
     jellyfish.queryAll.defaults.value
   )
+
+  lazy val mergeExpr = jellyfish.merge(
+      inputs(Seq(readsCount, readsCount)) ::
+      output(readsCountM) ::
+      *[AnyDenotation],
+    jellyfish.merge.defaults.value
+  )
+
 }
 
 class CommandGeneration extends FunSuite {
@@ -92,23 +98,33 @@ class CommandGeneration extends FunSuite {
 
   // TODO do something with this
   test("jellyfish count") {
+    countExpr.toSeq.foreach{ info(_) }
     assert { countExpr.toSeq.! == 0 }
   }
 
   test("jellyfish histo") {
+    histoExpr.toSeq.foreach{ info(_) }
     assert { histoExpr.toSeq.! == 0 }
   }
 
   test("jellyfish dump") {
+    dumpExpr.toSeq.foreach{ info(_) }
     assert { dumpExpr.toSeq.! == 0 }
   }
 
   test("jellyfish query") {
+    queryExpr.toSeq.foreach{ info(_) }
     assert { queryExpr.toSeq.! == 0 }
   }
 
   test("jellyfish queryAll") {
+    queryAllExpr.toSeq.foreach{ info(_) }
     assert { queryAllExpr.toSeq.! == 0 }
+  }
+
+  test("jellyfish merge") {
+    mergeExpr.toSeq.foreach{ info(_) }
+    assert { mergeExpr.toSeq.! == 0 }
   }
 }
 
@@ -121,9 +137,11 @@ class CommandGeneration extends FunSuite {
 [main/scala/api/options.scala]: ../../main/scala/api/options.scala.md
 [main/scala/api/package.scala]: ../../main/scala/api/package.scala.md
 [main/scala/api/expressions.scala]: ../../main/scala/api/expressions.scala.md
+[main/scala/api/uint64.scala]: ../../main/scala/api/uint64.scala.md
 [main/scala/api/commands/histo.scala]: ../../main/scala/api/commands/histo.scala.md
 [main/scala/api/commands/queryAll.scala]: ../../main/scala/api/commands/queryAll.scala.md
 [main/scala/api/commands/query.scala]: ../../main/scala/api/commands/query.scala.md
 [main/scala/api/commands/dump.scala]: ../../main/scala/api/commands/dump.scala.md
+[main/scala/api/commands/merge.scala]: ../../main/scala/api/commands/merge.scala.md
 [main/scala/api/commands/bc.scala]: ../../main/scala/api/commands/bc.scala.md
 [main/scala/api/commands/count.scala]: ../../main/scala/api/commands/count.scala.md
